@@ -103,6 +103,24 @@ function CMenu(){
             _oButFullscreen = new CToggle(_pStartPosFullscreen.x,_pStartPosFullscreen.y,oSprite,false, s_oStage);
             _oButFullscreen.addEventListener(ON_MOUSE_UP,this._onFullscreen,this);
         }
+        var iWidth = oSprite.width-100;
+        var iHeight = 120;
+        new CTLText(s_oStage, 
+                    CANVAS_WIDTH/2-120, 40, iWidth, iHeight, 
+                    40, "center", "#ffffff", PRIMARY_FONT, 1,
+                    2, 2,
+                    "ember",
+                    true, true, false,
+                    false );
+
+        var oSprite = s_oSpriteLibrary.getSprite('logo0');
+        _oLogo = createBitmap(oSprite);
+        //_oLogo.on("click",this._onLogoButRelease);
+        _oLogo.x = CANVAS_WIDTH/2 + 2;
+        _oLogo.y = 10;
+        _oLogo.scaleX = 0.7;
+        _oLogo.scaleY = 0.7;        
+        s_oStage.addChild(_oLogo);
 
         _oFade = new createjs.Shape();
         _oFade.graphics.beginFill("black").drawRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
@@ -221,9 +239,10 @@ function CMenu(){
         $(s_oMain).trigger("start_session");
         s_bFriendly = false;
         console.log('_onButFriendlyRelease')
+        ADVANCED_MODE = false;
         s_oMain.gotoSelectPlayers();
 
-        ADVANCED_MODE = false;
+        
         
         if ((s_oSoundtrack === null||s_oSoundtrack === undefined)){
             if (DISABLE_SOUND_MOBILE === false || s_bMobile === false) {
@@ -239,9 +258,10 @@ function CMenu(){
         $(s_oMain).trigger("start_session");
         s_bFriendly = false;
         console.log('_onButTournamentRelease')
+        ADVANCED_MODE = true;
         s_oMain.gotoSelectPlayers();
         
-        ADVANCED_MODE = true;
+        
         
         if ((s_oSoundtrack === null||s_oSoundtrack === undefined)){
                 s_oSoundtrack = playSound('soundtrack', 1, true);

@@ -1,5 +1,8 @@
 function CRoomPanel(){
-    
+    var urlParams = getUrlVars();
+    console.log('ADVANCED_MODE',ADVANCED_MODE)
+    const socket = io.connect("http://localhost:3000");
+    socket.emit("joinRoom",{user:urlParams['user'],email:urlParams['email'],roomid:urlParams['user'],gameId:urlParams['gameId'],advanceMode:ADVANCED_MODE});
     var _oFade;
     var _oPanelContainer;
     var _oButExit;
@@ -8,6 +11,8 @@ function CRoomPanel(){
     
     var _pStartPanelPos;
     
+    
+    console.log('urlParams',urlParams)
     this._init = function(){
         
         _oFade = new createjs.Shape();
@@ -132,6 +137,11 @@ function CRoomPanel(){
     
     this._init();
     
+
+    socket.on('message', (message) => {
+      console.log(message);
+      
+    });
     
 };
 
