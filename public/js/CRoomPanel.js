@@ -2,7 +2,7 @@ function CRoomPanel(){
     var urlParams = getUrlVars();
     console.log('ADVANCED_MODE',ADVANCED_MODE)
     const socket = io.connect("http://localhost:3000");
-    socket.emit("joinRoom",{user:urlParams['user'],email:urlParams['email'],roomid:urlParams['user'],gameId:urlParams['gameId'],advanceMode:ADVANCED_MODE});
+    socket.emit("joinRoom",{user:urlParams['user'],email:urlParams['email'],roomid:urlParams['roomid'],gameId:urlParams['gameId'],role:urlParams['role'],advanceMode:ADVANCED_MODE});
     var _oFade;
     var _oPanelContainer;
     var _oButExit;
@@ -140,6 +140,12 @@ function CRoomPanel(){
 
     socket.on('message', (message) => {
       console.log(message);
+      if(message.text == 'full'){
+        _msgText.text = 'This game is full.'
+        return;
+      }else{
+
+      }
       
     });
     

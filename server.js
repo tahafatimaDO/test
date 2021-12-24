@@ -7,7 +7,11 @@ const {
   userJoin,
   getCurrentUser,
   userLeave,
-  getRoomUsers
+  getRoomUsers,
+  createGameRoom,
+  getCurrentRoom,
+  visitorJoin,
+  getCurrentVisitor
 } = require('./utils/users');
 
 const app = express();
@@ -22,25 +26,50 @@ const botName = 'Game Engine Bot';
 // Run when client connects
 io.on('connection', socket => {
   console.log("Made socket connection", socket.id);
+  socket.on("visited", (data) => {
+    console.log('visited',data);
+    
+    visitorJoin(socket.id, data.userName, data.email); 
+    
+  });
   socket.on("createRoom", (data) => {
     console.log(data);
     roomId = data.gameId +'_'+ Math.floor(Math.random() * 26) + Date.now();
-    io.sockets.emit("roomCreated", roomId);
+    createGameRoom(data.user1, data.user1Email, data.user2, data.user2Email, data.gameId, roomId); 
+    socket.emit("roomCreated", roomId);
+
+    var invitedPlayer = getCurrentVisitor(data.user2Email);
+    console.log('invitedPlayer', invitedPlayer);
+
+    io.to(invitedPlayer.id).emit("invited", {gameId:data.gameId, roomId, msg:formatMessage(data.user1, 'You are invited to play ember pong game.')});
+
   });
 
   socket.on("joinRoom", (data) => {
     console.log(data);
-    const user = userJoin(socket.id, data.user, data.email, data.roomid, data.gameId, data.advanceMode );
+    const targetRoom = getCurrentRoom(data.roomid);
+    console.log('targetRoom',targetRoom)
+    const usersInRoom = getRoomUsers(data.roomid);
+    console.log('usersInRoom',usersInRoom)
+    
 
-    socket.join(user.roomid);
-    socket.emit('message', formatMessage(botName, 'Welcome to ember gaming engine!'));
+    if(usersInRoom.length > 0){
+      console.log('full room')
+      socket.emit('message', formatMessage(botName, 'full'));
+    }else{
+      console.log('vacancy room')
+      const user = userJoin(socket.id, data.user, data.role, data.email, data.roomid, data.gameId, data.advanceMode );
+      socket.join(user.roomid);
+      socket.emit('message', formatMessage(botName, 'Welcome to ember gaming engine!'));
 
-    socket.broadcast
-      .to(user.roomid)
-      .emit(
-        'message',
-        formatMessage(botName, `${user.userName} has joined the game`)
-    );
+      socket.broadcast
+        .to(user.roomid)
+        .emit(
+          'message',
+          formatMessage(botName, `${user.userName} has joined the game`)
+      );
+    }
+    
 
   });
 
