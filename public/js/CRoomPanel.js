@@ -1,7 +1,7 @@
 function CRoomPanel(){
     var urlParams = getUrlVars();
     console.log('ADVANCED_MODE',ADVANCED_MODE)
-    const socket = io.connect("http://localhost:3000");
+    const socket = io.connect("http://127.0.0.1:8080");
     socket.emit("joinRoom",{user:urlParams['user'],email:urlParams['email'],roomid:urlParams['roomid'],gameId:urlParams['gameId'],role:urlParams['role'],advanceMode:ADVANCED_MODE});
     var _oFade;
     var _oPanelContainer;
