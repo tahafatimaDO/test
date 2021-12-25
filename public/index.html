@@ -36,9 +36,9 @@
 <script type="text/javascript">
   $( document ).ready(function() { 
     var urlParams = getUrlVars();
-    var linkUrl = 'http://127.0.0.1:8080/'
+    var linkUrl = 'http://127.0.0.1:8080'
     var roomID;
-    const socket = io.connect("http://localhost:3000");
+    const socket = io.connect("http://127.0.0.1:8080");
     var userName = urlParams['user'];
     var emailAddress = urlParams['email'];
     var invitedUserName = urlParams['invitedUserName'];
